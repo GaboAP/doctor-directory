@@ -1,64 +1,25 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) exit;
+    if ( ! defined( 'ABSPATH' ) ) exit;
 
-$doctor   = null;
-$is_edit  = false;
-$errors   = array();
-$values   = array( 'full_name' => '', 'email' => '', 'address' => '' );
+    global $dd_form_errors, $dd_form_values;
+    $errors = $dd_form_errors ? $dd_form_errors : array();
+    $values = $dd_form_values ? $dd_form_values : array( 'full_name' => '', 'email' => '', 'address' => '' );
 
-// Are we editing?
-if ( isset( $_GET['id'] ) && intval( $_GET['id'] ) > 0 ) {
-    $doctor  = DD_Doctor::get_by_id( intval( $_GET['id'] ) );
-    $is_edit = true;
+    // Are we editing?
+    $doctor  = null;
+    $is_edit = false;
 
-    if ( $doctor ) {
-        $values = array(
-            'full_name' => $doctor->full_name,
-            'email'     => $doctor->email,
-            'address'   => $doctor->address,
-        );
-    }
-}
-
-// Handle form submission
-if ( $_SERVER['REQUEST_METHOD'] === 'POST' && isset( $_POST['dd_submit'] ) ) {
-
-    // Verify nonce
-    if ( ! isset( $_POST['dd_nonce'] ) || ! wp_verify_nonce( $_POST['dd_nonce'], 'dd_save_doctor' ) ) {
-        wp_die( 'Security check failed.' );
-    }
-
-    $values = array(
-        'full_name' => isset( $_POST['full_name'] ) ? $_POST['full_name'] : '',
-        'email'     => isset( $_POST['email'] )     ? $_POST['email']     : '',
-        'address'   => isset( $_POST['address'] )   ? $_POST['address']   : '',
-    );
-
-    // Server-side validation
-    $errors = DD_Doctor::validate( $values );
-
-    if ( empty( $errors ) ) {
-        if ( $is_edit && $doctor ) {
-            $success = DD_Doctor::update( $doctor->id, $values );
-            $message = $success ? 'Doctor updated successfully.' : 'Could not update the doctor.';
-        } else {
-            $new_id  = DD_Doctor::create( $values );
-            $success = $new_id !== false;
-            $message = $success ? 'Doctor added successfully.' : 'Could not add the doctor. Email may already exist.';
-        }
-
-        if ( $success ) {
-            // Redirect to list with success message
-            wp_redirect( admin_url( 'admin.php?page=doctor-directory&message=' . urlencode( $message ) ) );
-            exit;
+    if ( isset( $_GET['id'] ) && intval( $_GET['id'] ) > 0 ) {
+        $doctor  = DD_Doctor::get_by_id( intval( $_GET['id'] ) );
+        $is_edit = true;
+        if ( $doctor && empty( $dd_form_values ) ) {
+            $values = array(
+                'full_name' => $doctor->full_name,
+                'email'     => $doctor->email,
+                'address'   => $doctor->address,
+            );
         }
     }
-}
-
-// Show success message passed via redirect
-if ( isset( $_GET['message'] ) ) {
-    echo '<div class="notice notice-success is-dismissible"><p>' . esc_html( urldecode( $_GET['message'] ) ) . '</p></div>';
-}
 ?>
 
 <div class="wrap dd-wrap">
