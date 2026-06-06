@@ -54,48 +54,36 @@ $doctors = DD_Doctor::get_all($search);
             </div>
         <?php else : ?>
             <table class="wp-list-table widefat fixed striped dd-table">
-                <!-- mismo contenido que ya tienes -->
+                <thead>
+                    <tr>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th>Address</th>
+                        <th>Added</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($doctors as $doctor) : ?>
+                        <tr>
+                            <td><strong><?php echo esc_html($doctor->full_name); ?></strong></td>
+                            <td><?php echo esc_html($doctor->email); ?></td>
+                            <td><?php echo esc_html($doctor->address); ?></td>
+                            <td><?php echo esc_html(date('M j, Y', strtotime($doctor->created_at))); ?></td>
+                            <td class="dd-actions">
+                                <a href="<?php echo admin_url('admin.php?page=doctor-directory-add&id=' . $doctor->id); ?>" class="button button-small">Edit</a>
+                                <a href="<?php echo wp_nonce_url(admin_url('admin.php?page=doctor-directory&action=delete&id=' . $doctor->id), 'dd_delete_doctor'); ?>"
+                                    class="button button-small button-link-delete dd-delete-btn"
+                                    data-name="<?php echo esc_attr($doctor->full_name); ?>">
+                                    Delete
+                                </a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
             </table>
             <p class="dd-count"><?php echo count($doctors); ?> doctor(s) found.</p>
         <?php endif; ?>
     </div>
-    
-    <!-- Doctors table -->
-    <?php if (empty($doctors)) : ?>
-        <div class="dd-empty-state">
-            <span class="dashicons dashicons-heart dd-empty-icon"></span>
-            <p><?php echo $search ? 'No doctors found for that search.' : 'No doctors yet. Add your first one!'; ?></p>
-        </div>
-    <?php else : ?>
-        <table class="wp-list-table widefat fixed striped dd-table">
-            <thead>
-                <tr>
-                    <th>Full Name</th>
-                    <th>Email</th>
-                    <th>Address</th>
-                    <th>Added</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($doctors as $doctor) : ?>
-                    <tr>
-                        <td><strong><?php echo esc_html($doctor->full_name); ?></strong></td>
-                        <td><?php echo esc_html($doctor->email); ?></td>
-                        <td><?php echo esc_html($doctor->address); ?></td>
-                        <td><?php echo esc_html(date('M j, Y', strtotime($doctor->created_at))); ?></td>
-                        <td class="dd-actions">
-                            <a href="<?php echo admin_url('admin.php?page=doctor-directory-add&id=' . $doctor->id); ?>" class="button button-small">Edit</a>
-                            <a href="<?php echo wp_nonce_url(admin_url('admin.php?page=doctor-directory&action=delete&id=' . $doctor->id), 'dd_delete_doctor'); ?>"
-                                class="button button-small button-link-delete dd-delete-btn"
-                                data-name="<?php echo esc_attr($doctor->full_name); ?>">
-                                Delete
-                            </a>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-        <p class="dd-count"><?php echo count($doctors); ?> doctor(s) found.</p>
-    <?php endif; ?>
-</div>
+
+</div><!-- .dd-wrap -->

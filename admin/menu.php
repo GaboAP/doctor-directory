@@ -44,9 +44,12 @@ class DD_Admin_Menu
 
     public static function handle_form_submit()
     {
-        DD_Auth::require_manage_permission();
-
         if (!isset($_POST['dd_submit'])) return;
+
+        // Use WP's native check instead of DD_Auth at this hook
+        if (!current_user_can('manage_options')) {
+            wp_die('You do not have permission to perform this action.', 'Access Denied', ['response' => 403]);
+        }
 
         if (!isset($_POST['dd_nonce']) || !wp_verify_nonce($_POST['dd_nonce'], 'dd_save_doctor')) {
             wp_die('Security check failed.');
@@ -111,9 +114,10 @@ class DD_Admin_Menu
 
     public static function enqueue_assets($hook)
     {
-        // Only load our assets on our plugin pages
+        error_log('DD Hook: ' . $hook);
         if (strpos($hook, 'doctor-directory') === false) return;
 
+        // Styles
         wp_enqueue_style(
             'dd-admin-style',
             DD_PLUGIN_URL . 'assets/css/admin-style.css',
@@ -121,16 +125,33 @@ class DD_Admin_Menu
             DD_VERSION
         );
 
+        // Scripts — order matters, each declares its dependencies
         wp_enqueue_script(
-            'dd-admin-scripts',
-            DD_PLUGIN_URL . 'assets/js/admin-scripts.js',
-            array('jquery'),   // jQuery como dependencia (ya viene en WP)
+            'dd-validation',
+            DD_PLUGIN_URL . 'assets/js/dd-validation.js',
+            array('jquery'),
             DD_VERSION,
-            true                 // Load in footer
+            true
         );
 
-        // Pass PHP data to JS (for AJAX later)
-        wp_localize_script('dd-admin-scripts', 'DD_Ajax', array(
+        wp_enqueue_script(
+            'dd-modal',
+            DD_PLUGIN_URL . 'assets/js/dd-modal.js',
+            array('jquery'),
+            DD_VERSION,
+            true
+        );
+
+        wp_enqueue_script(
+            'dd-search',
+            DD_PLUGIN_URL . 'assets/js/dd-search.js',
+            array('jquery', 'dd-modal'),
+            DD_VERSION,
+            true
+        );
+
+        // Pass PHP data to JS — only needed by dd-search
+        wp_localize_script('dd-search', 'DD_Ajax', array(
             'ajax_url' => admin_url('admin-ajax.php'),
             'nonce'    => wp_create_nonce('dd_nonce'),
         ));
