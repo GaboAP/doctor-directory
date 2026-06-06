@@ -30,6 +30,7 @@
     <div class="dd-form-card">
         <form method="post" action="" id="dd-doctor-form" novalidate>
             <?php wp_nonce_field( 'dd_save_doctor', 'dd_nonce' ); ?>
+            <input type="hidden" name="doctor_id" value="<?php echo $is_edit && $doctor ? esc_attr( $doctor->id ) : 0; ?>">
 
             <!-- Full Name -->
             <div class="dd-field <?php echo isset( $errors['full_name'] ) ? 'dd-field--error' : ''; ?>">

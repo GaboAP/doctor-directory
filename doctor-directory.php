@@ -29,4 +29,4 @@ require_once DD_PLUGIN_DIR . 'admin/menu.php';
 register_activation_hook( __FILE__, array( 'DD_Database', 'create_table' ) );
 
 //Actions
-add_action('admin_init', ['DD_Admin', 'handle_form_submit']);
+add_action('admin_init', ['DD_Admin_Menu', 'handle_form_submit']);

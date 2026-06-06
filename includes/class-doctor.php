@@ -65,7 +65,7 @@ class DD_Doctor {
         global $wpdb;
         $table = DD_Database::get_table_name();
 
-        $updated = $wpdb->update(
+        $result = $wpdb->update(
             $table,
             array(
                 'full_name' => sanitize_text_field( $data['full_name'] ),
@@ -77,7 +77,8 @@ class DD_Doctor {
             array( '%d' )
         );
 
-        return $updated !== false;
+        // $result is false on error, 0 if no rows changed (still success)
+        return $result !== false;
     }
 
     /**
