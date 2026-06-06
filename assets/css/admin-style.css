@@ -1,0 +1,207 @@
+/* ── Variables ──────────────────────────────────────────────────── */
+:root {
+    --dd-primary:     #2271b1;
+    --dd-danger:      #d63638;
+    --dd-success:     #00a32a;
+    --dd-border:      #dcdcde;
+    --dd-bg:          #f6f7f7;
+    --dd-card:        #ffffff;
+    --dd-text:        #1e1e1e;
+    --dd-muted:       #787c82;
+    --dd-radius:      6px;
+    --dd-shadow:      0 1px 4px rgba(0,0,0,.08);
+}
+
+/* ── Layout ─────────────────────────────────────────────────────── */
+.dd-wrap {
+    max-width: 1100px;
+}
+
+/* ── Search ─────────────────────────────────────────────────────── */
+.dd-search-form {
+    margin: 16px 0;
+}
+
+.dd-search-input {
+    width: 280px;
+    margin-right: 6px;
+}
+
+/* ── Table ──────────────────────────────────────────────────────── */
+.dd-table {
+    margin-top: 12px;
+}
+
+.dd-table th {
+    font-weight: 600;
+}
+
+.dd-actions {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.dd-count {
+    color: var(--dd-muted);
+    font-size: 13px;
+    margin-top: 8px;
+}
+
+/* ── Empty state ────────────────────────────────────────────────── */
+.dd-empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--dd-muted);
+    background: var(--dd-card);
+    border: 1px solid var(--dd-border);
+    border-radius: var(--dd-radius);
+    margin-top: 16px;
+}
+
+.dd-empty-icon {
+    font-size: 48px;
+    display: block;
+    margin-bottom: 12px;
+    color: var(--dd-border);
+}
+
+/* ── Form card ──────────────────────────────────────────────────── */
+.dd-form-card {
+    background: var(--dd-card);
+    border: 1px solid var(--dd-border);
+    border-radius: var(--dd-radius);
+    box-shadow: var(--dd-shadow);
+    padding: 32px;
+    max-width: 640px;
+    margin-top: 20px;
+}
+
+/* ── Fields ─────────────────────────────────────────────────────── */
+.dd-field {
+    margin-bottom: 20px;
+}
+
+.dd-field label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 6px;
+    font-size: 13px;
+}
+
+.dd-field input[type="text"],
+.dd-field input[type="email"],
+.dd-field textarea {
+    width: 100%;
+    border-radius: var(--dd-radius);
+    border: 1.5px solid var(--dd-border);
+    padding: 8px 12px;
+    font-size: 14px;
+    transition: border-color .2s, box-shadow .2s;
+    box-sizing: border-box;
+}
+
+.dd-field input:focus,
+.dd-field textarea:focus {
+    border-color: var(--dd-primary);
+    box-shadow: 0 0 0 2px rgba(34,113,177,.15);
+    outline: none;
+}
+
+/* Error state */
+.dd-field--error input[type="text"],
+.dd-field--error input[type="email"],
+.dd-field--error textarea {
+    border-color: var(--dd-danger) !important;
+    box-shadow: 0 0 0 2px rgba(214, 54, 56, .2) !important;
+}
+
+.dd-error-msg {
+    display: block;
+    color: var(--dd-danger);
+    font-size: 12px;
+    margin-top: 4px;
+    min-height: 16px;
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity .2s, transform .2s;
+}
+
+.dd-error-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.required {
+    color: var(--dd-danger);
+}
+
+/* ── Form actions ───────────────────────────────────────────────── */
+.dd-form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid var(--dd-border);
+}
+
+/* ── Modal ──────────────────────────────────────────────────────── */
+.dd-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.5);
+    z-index: 99999;
+    align-items: center;
+    justify-content: center;
+}
+
+.dd-modal-overlay.dd-modal-open {
+    display: flex;
+    animation: dd-fade-in .2s ease;
+}
+
+.dd-modal {
+    background: var(--dd-card);
+    border-radius: 10px;
+    padding: 36px 32px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0,0,0,.18);
+    animation: dd-slide-up .25s ease;
+}
+
+.dd-modal-icon {
+    font-size: 40px;
+    margin-bottom: 12px;
+}
+
+.dd-modal-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0 0 10px;
+}
+
+.dd-modal-body {
+    color: var(--dd-muted);
+    font-size: 14px;
+    margin-bottom: 24px;
+    line-height: 1.6;
+}
+
+.dd-modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+@keyframes dd-fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+@keyframes dd-slide-up {
+    from { transform: translateY(16px); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+}
