@@ -114,7 +114,6 @@ class DD_Admin_Menu
 
     public static function enqueue_assets($hook)
     {
-        error_log('DD Hook: ' . $hook);
         if (strpos($hook, 'doctor-directory') === false) return;
 
         // Styles

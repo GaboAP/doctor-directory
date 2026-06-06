@@ -22,10 +22,6 @@
                 });
 
                 if (!valid) {
-                    console.log('Validation failed - valid:', valid);
-                    console.log('full_name:', $('#full_name').val());
-                    console.log('email:', $('#email').val());
-                    console.log('address:', $('#address').val());
                     e.preventDefault();
                     $('.button-primary').addClass('dd-shake');
                     setTimeout(() => $('.button-primary').removeClass('dd-shake'), 500);
