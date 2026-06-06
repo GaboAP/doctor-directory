@@ -38,51 +38,55 @@ class DD_Admin_Menu {
         );
     }
 
-    public static function render_list_page() {
-        require_once DD_PLUGIN_DIR . 'admin/page-list.php';
-    }
+    public static function handle_form_submit() {
 
-public static function render_form_page() {
-    // Process form BEFORE loading the view
-    if ( $_SERVER['REQUEST_METHOD'] === 'POST' && isset( $_POST['dd_submit'] ) ) {
-        if ( ! isset( $_POST['dd_nonce'] ) || ! wp_verify_nonce( $_POST['dd_nonce'], 'dd_save_doctor' ) ) {
-            wp_die( 'Security check failed.' );
+        if (!isset($_POST['dd_submit'])) return;
+
+        if (!isset($_POST['dd_nonce']) || !wp_verify_nonce($_POST['dd_nonce'], 'dd_save_doctor')) {
+            wp_die('Security check failed.');
         }
 
-        $id      = isset( $_POST['doctor_id'] ) ? intval( $_POST['doctor_id'] ) : 0;
+        $id = isset($_POST['doctor_id']) ? intval($_POST['doctor_id']) : 0;
         $is_edit = $id > 0;
-        $values  = array(
-            'full_name' => isset( $_POST['full_name'] ) ? $_POST['full_name'] : '',
-            'email'     => isset( $_POST['email'] )     ? $_POST['email']     : '',
-            'address'   => isset( $_POST['address'] )   ? $_POST['address']   : '',
-        );
 
-        $errors = DD_Doctor::validate( $values );
+        $values = [
+            'full_name' => $_POST['full_name'] ?? '',
+            'email'     => $_POST['email'] ?? '',
+            'address'   => $_POST['address'] ?? '',
+        ];
 
-        if ( empty( $errors ) ) {
-            if ( $is_edit ) {
-                $success = DD_Doctor::update( $id, $values );
-                $msg     = $success ? 'Doctor updated successfully.' : 'Could not update the doctor.';
+        $errors = DD_Doctor::validate($values);
+
+        if (empty($errors)) {
+
+            if ($is_edit) {
+                $success = DD_Doctor::update($id, $values);
+                $msg = $success ? 'Doctor updated successfully.' : 'Update failed.';
             } else {
-                $new_id  = DD_Doctor::create( $values );
+                $new_id = DD_Doctor::create($values);
                 $success = $new_id !== false;
-                $msg     = $success ? 'Doctor added successfully.' : 'Could not add the doctor. Email may already exist.';
+                $msg = $success ? 'Doctor added successfully.' : 'Insert failed.';
             }
 
-            if ( $success ) {
-                wp_redirect( admin_url( 'admin.php?page=doctor-directory&message=' . urlencode( $msg ) ) );
+            if ($success) {
+                wp_redirect(admin_url('admin.php?page=doctor-directory&message=' . urlencode($msg)));
                 exit;
             }
         }
 
-        // If errors, pass them to the view via globals
+        // pass errors to form
         global $dd_form_errors, $dd_form_values;
         $dd_form_errors = $errors;
         $dd_form_values = $values;
     }
 
-    require_once DD_PLUGIN_DIR . 'admin/page-form.php';
-}
+    public static function render_list_page() {
+        require_once DD_PLUGIN_DIR . 'admin/page-list.php';
+    }
+
+    public static function render_form_page() {
+        require_once DD_PLUGIN_DIR . 'admin/page-form.php';
+    }
 
     public static function enqueue_assets( $hook ) {
         // Only load our assets on our plugin pages
