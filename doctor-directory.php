@@ -24,6 +24,7 @@ define( 'DD_TABLE_NAME',  'doctors' ); // will be prefixed by $wpdb
 require_once DD_PLUGIN_DIR . 'includes/class-db.php';
 require_once DD_PLUGIN_DIR . 'includes/class-doctor.php';
 require_once DD_PLUGIN_DIR . 'admin/menu.php';
+require_once DD_PLUGIN_DIR . 'includes/class-auth.php';
 
 // Activation hook — creates the DB table
 register_activation_hook( __FILE__, array( 'DD_Database', 'create_table' ) );
